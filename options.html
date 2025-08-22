@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hey Dont Forget - Options</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="options-container">
+        <header class="options-header">
+            <h1>Hey Dont Forget - Options</h1>
+        </header>
+
+        <nav class="options-nav">
+            <button class="nav-tab active" data-tab="settings">Settings</button>
+            <button class="nav-tab" data-tab="history">History</button>
+        </nav>
+
+        <main class="options-main">
+            <!-- Settings Tab -->
+            <div class="tab-content active" id="settingsTab">
+                <div class="settings-section">
+                    <h2>Daily Reminder Time</h2>
+                    <div class="form-group">
+                        <label for="dailyTime">Time:</label>
+                        <input type="time" id="dailyTime" name="dailyTime" value="09:00">
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2>Date Display Format</h2>
+                    <div class="form-group">
+                        <label for="dateFormat">Format:</label>
+                        <select id="dateFormat" name="dateFormat">
+                            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                            <option value="MM-DD-YYYY">MM-DD-YYYY</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2>Rating Ranges (Days)</h2>
+                    <div class="rating-ranges">
+                        <div class="rating-range">
+                            <label>Rating 1 (Soon):</label>
+                            <div class="range-inputs">
+                                <input type="number" id="rating1Min" min="1" max="10" value="1">
+                                <span>to</span>
+                                <input type="number" id="rating1Max" min="1" max="10" value="2">
+                                <span>days</span>
+                            </div>
+                        </div>
+                        
+                        <div class="rating-range">
+                            <label>Rating 2 (In a week):</label>
+                            <div class="range-inputs">
+                                <input type="number" id="rating2Min" min="1" max="30" value="3">
+                                <span>to</span>
+                                <input type="number" id="rating2Max" min="1" max="30" value="10">
+                                <span>days</span>
+                            </div>
+                        </div>
+                        
+                        <div class="rating-range">
+                            <label>Rating 3 (In two weeks):</label>
+                            <div class="range-inputs">
+                                <input type="number" id="rating3Min" min="1" max="60" value="11">
+                                <span>to</span>
+                                <input type="number" id="rating3Max" min="1" max="60" value="22">
+                                <span>days</span>
+                            </div>
+                        </div>
+                        
+                        <div class="rating-range">
+                            <label>Rating 4 (In a month):</label>
+                            <div class="range-inputs">
+                                <input type="number" id="rating4Min" min="1" max="90" value="23">
+                                <span>to</span>
+                                <input type="number" id="rating4Max" min="1" max="90" value="40">
+                                <span>days</span>
+                            </div>
+                        </div>
+                        
+                        <div class="rating-range">
+                            <label>Rating 5 (In a few months):</label>
+                            <div class="range-inputs">
+                                <input type="number" id="rating5Min" min="1" max="365" value="41">
+                                <span>to</span>
+                                <input type="number" id="rating5Max" min="1" max="365" value="70">
+                                <span>days</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2>Data Management</h2>
+                    <div class="data-actions">
+                        <button class="btn-primary" id="exportBtn">Export Data</button>
+                        <button class="btn-secondary" id="importBtn">Import Data</button>
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <button class="btn-primary" id="saveSettingsBtn">Save Settings</button>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div class="tab-content" id="historyTab">
+                <div class="history-controls">
+                    <div class="history-search">
+                        <input type="text" id="historySearch" placeholder="Search history...">
+                    </div>
+                    <div class="history-filter">
+                        <select id="historyFilter">
+                            <option value="all">All</option>
+                            <option value="Done">Done</option>
+                            <option value="ScheduledAgain">Scheduled Again</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="history-table-container">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Created</th>
+                                <th>Scheduled/Fired</th>
+                                <th>Title</th>
+                                <th>Reference</th>
+                                <th>Notes</th>
+                                <th>Resolution</th>
+                                <th>Resolved At</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <!-- History rows will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="history-empty" id="historyEmpty">
+                    <p>No history entries found.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Import Success Modal -->
+    <div class="modal-overlay" id="importModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Import Complete</h2>
+                <button class="btn-close" id="closeImportModal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div id="importResults"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-primary" id="closeImportBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="options.js"></script>
+</body>
+</html>

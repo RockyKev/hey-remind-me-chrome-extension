@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hey Dont Forget</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="popup-container">
+        <header class="popup-header">
+            <h1>Hey Dont Forget</h1>
+            <button class="btn-secondary" id="openOptions">⚙️</button>
+        </header>
+
+        <main class="popup-main">
+            <!-- Need Attention Section -->
+            <section class="section" id="needAttentionSection">
+                <h2>Reminders Need Attention</h2>
+                <div class="reminder-list" id="needAttentionList">
+                    <div class="empty-state" id="needAttentionEmpty">
+                        <p>No reminders need attention right now.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Coming Up Section -->
+            <section class="section" id="comingUpSection">
+                <h2>Reminders Coming Up</h2>
+                <div class="reminder-list" id="comingUpList">
+                    <div class="empty-state" id="comingUpEmpty">
+                        <p>No upcoming reminders.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- New Reminder Button -->
+            <div class="new-reminder-section">
+                <button class="btn-primary" id="newReminderBtn">+ New Reminder</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Reminder Modal -->
+    <div class="modal-overlay" id="reminderModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">New Reminder</h2>
+                <button class="btn-close" id="closeModal">&times;</button>
+            </div>
+            
+            <form class="reminder-form" id="reminderForm">
+                <div class="form-group">
+                    <label for="title">Title *</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+
+                <div class="form-group">
+                    <label>When to Remind</label>
+                    <div class="rating-options">
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="1" checked>
+                            <span class="rating-label">1 - Soon (1-2 days)</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="2">
+                            <span class="rating-label">2 - In a week (3-10 days)</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="3">
+                            <span class="rating-label">3 - In two weeks (11-22 days)</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="4">
+                            <span class="rating-label">4 - In a month (23-40 days)</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="5">
+                            <span class="rating-label">5 - In a few months (41-70 days)</span>
+                        </label>
+                        <label class="rating-option">
+                            <input type="radio" name="rating" value="custom">
+                            <span class="rating-label">Custom days:</span>
+                            <input type="number" id="customDays" name="customDays" min="1" max="365" disabled>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reference">Reference</label>
+                    <input type="text" id="reference" name="reference" placeholder="Optional reference text">
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Optional notes"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-primary" id="saveBtn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Due Item Modal -->
+    <div class="modal-overlay" id="dueItemModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Reminder Due</h2>
+                <button class="btn-close" id="closeDueModal">&times;</button>
+            </div>
+            
+            <div class="due-item-content">
+                <div class="due-item-details">
+                    <h3 id="dueItemTitle"></h3>
+                    <p class="due-item-reference" id="dueItemReference"></p>
+                    <p class="due-item-notes" id="dueItemNotes"></p>
+                </div>
+
+                <div class="schedule-again-checkbox">
+                    <label>
+                        <input type="checkbox" id="scheduleAgainCheckbox" checked>
+                        Schedule a new Reminder
+                    </label>
+                </div>
+
+                <div class="due-item-actions">
+                    <button class="btn-secondary" id="snoozeBtn">Snooze</button>
+                    <button class="btn-primary" id="doneBtn">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="popup.js"></script>
+</body>
+</html>

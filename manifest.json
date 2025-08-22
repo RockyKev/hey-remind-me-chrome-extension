@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Hey Dont Forget",
+  "version": "1.0.0",
+  "description": "Don't forget to do that thing in the future. No cloud, no telemetry — all local.",
+  "permissions": [
+    "action",
+    "storage",
+    "alarms",
+    "notifications",
+    "downloads"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Hey Dont Forget"
+  },
+  "options_page": "options.html",
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  }
+}

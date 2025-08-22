@@ -1,0 +1,256 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+
+Updated with your answers baked in. Paste this over your existing `overview.mdc`.
+
+---
+
+# Hey Dont Forget — Overview (MVP)
+
+**Tagline:** Don’t forget to do that thing in the future. No cloud, no telemetry — all local.
+**Platform:** Chrome Extension (Manifest V3), latest Chrome
+**Privacy:** 100% local (no sync, no network calls, no telemetry)
+
+## 1) Problem & Goal
+
+People need lightweight, one-off “future nudges” (e.g., check in with a friend, cancel a trial) without setting up calendars or cloud accounts. The extension lets users create reminders that surface later, then quickly mark **Done** or **reschedule**—all stored locally.
+
+## 2) MVP Scope (Locked)
+
+* **Popup UI** on toolbar click (no page injection).
+* **Daily 9:00 AM local** digest powered by **one alarm**; shows a **single toast notification** (`requireInteraction: true`) with the first due item and a “+N more” count. Clicking opens the popup modal.
+* **Need Attention** bucket shows any reminder with `scheduledDate <= today` and not Done.
+* **Due-item modal actions:**
+
+  * **Snooze:** dismisses the modal; item remains in **Need Attention** (no reschedule).
+  * **Done:** marks item done, adds to **History**. A checkbox above **Done** (default **checked**) says **“Schedule a new Reminder”**:
+
+    * If checked: open **New Reminder** prefilled with prior Title/Reference/Notes and same rating.
+    * If unchecked: close without creating a new one.
+* **Settings** page (options page) with:
+
+  * Editable rating ranges (1–5) in **days** (min/max).
+  * Daily reminder time (default **09:00**).
+  * **Date display format** selector: **`YYYY-MM-DD` (default)** or **`MM-DD-YYYY`** (internal storage remains `YYYY-MM-DD`).
+  * **Export/Import** JSON (merge by `id`, imported items override existing by `id`). Export filename uses **current date**.
+* **History** page (read-only): created date, scheduled (fired) date, title, reference, notes, resolution.
+* **Reference link** is **always copied to clipboard** with a small confirmation (never auto-open).
+* **Storage:** `chrome.storage.local` only. No sync.
+
+## 3) Key User Flows
+
+### 3.1 Popup (default view)
+
+* **Sections:**
+
+  * **Reminders Need Attention** (today or past-due; editable on click)
+  * **Reminders Coming Up** (Title — When)
+  * **New Reminder** button
+* Clicking a reminder opens the **edit modal** (same fields as New Reminder).
+
+### 3.2 New / Edit Reminder modal
+
+* **Fields:**
+
+  * Title (text)
+  * When to Remind: ratings **1–5** (radio). **6th** control is a **custom days** number input (exact days).
+  * Reference (text; copied to clipboard on action)
+  * Notes (textarea)
+* **Create / Save** persists the reminder and, for ratings 1–5, picks a **truly random (uniform) day inside the range** (no bias).
+* **Status** starts as `pending`.
+
+### 3.3 Daily reminder at 09:00
+
+* Background checks for reminders due **today** (and earlier not done).
+* Shows a **toast notification** with:
+
+  * Headline: “Reminders Need Attention”
+  * Primary line: first reminder’s Title
+  * Secondary: “+N other reminders in Need Attention”
+* Clicking the toast opens the popup modal directly into **Need Attention**.
+
+### 3.4 Acting on due items (modal)
+
+* **Snooze:** dismisses; item remains in **Need Attention**.
+* **Done:** history entry added; if “Schedule a new Reminder” is checked, open prefilled New Reminder; else close.
+
+## 4) Settings & History
+
+### 4.1 Settings (Options page)
+
+* **Rating ranges (days):**
+
+  * 1 → 1–2 (soon)
+  * 2 → 3–10 (in a week)
+  * 3 → 11–22 (in two weeks)
+  * 4 → 23–40 (in a month)
+  * 5 → 41–70 (in a few months)
+* **Daily reminder time:** default 09:00 (browser local).
+* **Date display format:** dropdown with **`YYYY-MM-DD` (default)** and **`MM-DD-YYYY`**.
+
+  * **Internal storage** always uses `YYYY-MM-DD`.
+  * **Display** uses the selected format throughout the UI.
+* **Export**: downloads `reminders-export-YYYYMMDD.json` (current date) with active reminders + full history + settings + `schemaVersion`.
+* **Import**: merges by `id`; imported items **override** existing with same `id`.
+
+### 4.2 History (read-only)
+
+* Columns: Created, Scheduled/Fired, Title, Reference, Notes, Resolution (`Done` or `ScheduledAgain`), ResolvedAt.
+
+## 5) Non-Goals (MVP)
+
+* No per-reminder precise scheduling times (day-level only).
+* No natural-language dates.
+* No cross-device sync/cloud backup.
+* No content scripts or page overlays.
+* No Tailwind/Vite (MVP is plain HTML/CSS/JS).
+
+## 6) Data Model (Shapes)
+
+### 6.1 Reminder
+
+```json
+{
+  "id": "ulid-or-uuid",
+  "title": "string",
+  "createdAt": "ISO-8601",
+  "scheduledDate": "YYYY-MM-DD",
+  "rating": 1,
+  "customDays": null,
+  "reference": "string",
+  "notes": "string",
+  "status": "pending",
+  "lastFiredAt": null,
+  "resolved": null
+}
+```
+
+### 6.2 Settings
+
+```json
+{
+  "schemaVersion": 1,
+  "dailyReminderTime": "09:00",
+  "dateDisplayFormat": "YYYY-MM-DD", // or "MM-DD-YYYY"
+  "ratingRanges": {
+    "1": { "minDays": 1, "maxDays": 2 },
+    "2": { "minDays": 3, "maxDays": 10 },
+    "3": { "minDays": 11, "maxDays": 22 },
+    "4": { "minDays": 23, "maxDays": 40 },
+    "5": { "minDays": 41, "maxDays": 70 }
+  }
+}
+```
+
+### 6.3 Export file
+
+```json
+{
+  "schemaVersion": 1,
+  "exportedAt": "ISO-8601",
+  "settings": { ...as above... },
+  "reminders": [ ...Reminder... ],
+  "history": [
+    {
+      "id": "source reminder id",
+      "createdAt": "ISO-8601",
+      "scheduledDate": "YYYY-MM-DD",
+      "resolvedAt": "ISO-8601",
+      "resolution": "Done" | "ScheduledAgain",
+      "title": "string",
+      "reference": "string",
+      "notes": "string"
+    }
+  ]
+}
+```
+
+## 7) Scheduling Logic
+
+* **Create:**
+
+  * If rating 1–5: pick a **uniform random** integer day in the configured range; set `scheduledDate`.
+  * If custom: `scheduledDate = today + customDays`.
+* **Daily alarm:**
+
+  * One `chrome.alarms` entry at the configured time.
+  * At fire: gather `pending` reminders with `scheduledDate <= today`.
+  * If any: raise one `chrome.notifications.create` with `requireInteraction: true`.
+* **Open popup from toast:** user click → popup UI → Need Attention list.
+
+## 8) Chrome Permissions
+
+* `"action"` (popup)
+* `"storage"` (local persistence)
+* `"alarms"` (daily check)
+* `"notifications"` (toast)
+* `"downloads"` (export)
+
+*No content scripts, no host permissions.*
+
+## 9) Minimal File Layout
+
+```
+/manifest.json
+/background.js           // service worker: alarms, notifications
+/popup.html
+/popup.js                // Need Attention, Coming Up, New Reminder UI
+/options.html            // Settings + History tabs
+/options.js
+/styles.css              // vanilla CSS; clean, modern, accessible
+/assets/icon16.png       // placeholder referenced; move real files here
+/assets/icon48.png
+/assets/icon128.png
+/lib/storage.js          // thin wrappers around chrome.storage.local
+/lib/scheduler.js        // pickRandomDateInRange, date utils
+/lib/exportImport.js     // JSON export/import, merge-by-id
+/lib/clipboard.js        // copy reference + toast
+```
+
+## 10) Implementation Notes
+
+* **Icons:** Code references `/assets/icon16.png`, `/assets/icon48.png`, `/assets/icon128.png`. Use placeholders now; move real assets later.
+* **Styling:** **Vanilla CSS** with a tiny reset, system font stack, accessible focus states, and CSS variables for spacings/sizes/colors. Keep it clean and modern, no framework.
+* **Dates:** store `scheduledDate` as `YYYY-MM-DD` (day-precision). **Display** via **Settings → Date display format** (`YYYY-MM-DD` default; or `MM-DD-YYYY`).
+* **Randomization:** uniform random in `[minDays, maxDays]`.
+* **“Need Attention”** query: `status === "pending" && scheduledDate <= today`.
+* **Schedule Again flow:** when Done + checkbox **checked**, create a new reminder prefilled with prior data and same rating; add the previous to **History** with `resolution = "ScheduledAgain"`.
+* **Reference copy UX:** show small inline confirmation “Reference copied”.
+
+## 11) Quick Chrome Concepts
+
+* **Alarms:** background timers that run your service worker at a time; you handle logic in code.
+* **Notifications:** system-level toasts; can be set to stay until user interacts via `requireInteraction: true`. Clicking can open your popup/options.
+* **Content scripts:** scripts injected into web pages to interact with page DOM. **Not used** in MVP.
+
+## 12) Use Cases (Samples)
+
+* **Text my friend (rating 5):** creates reminder scheduled randomly between 41–70 days; at day X, toast → modal → act.
+* **Call my friend (rating 3):** scheduled randomly between 11–22 days (corrected).
+* **Cancel a subscription (custom 28 days):** exact day set; cancel; mark Done.
+
+## 13) QA Checklist (MVP)
+
+* Install → open popup → create reminders across each rating and custom.
+* Change daily time in Settings → verify next alarm fires at new time.
+* At 09:00: toast shows “first title + N other reminders”.
+* Click toast → popup opens on **Need Attention** with editable rows.
+* **Snooze** leaves item in Need Attention; closing modal shows it still listed.
+* **Done** with **Schedule a new Reminder** checked → history entry added, prefilled **New Reminder** opens.
+* **Done** unchecked → history entry added, no new modal.
+* Export and re-import → entries merged by `id`; imported override existing.
+* Copy reference → confirmation shown; clipboard contains exact string.
+
+## 14) Future (Post-MVP)
+
+* Optional snooze presets (Later today / Tomorrow / Next week).
+* Per-reminder specific times.
+* Keyboard shortcuts.
+* Tailwind + Vite if UI complexity grows.
+
+---
+
+If you want any more toggles (e.g., a third display format like `MMM D, YYYY`) or minor copy changes (“Need Attention” wording), say the word and I’ll patch this.
