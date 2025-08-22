@@ -175,6 +175,12 @@ async function handleReminderSubmit(e) {
     
     if (!title) return;
     
+    // Show loading state
+    const saveBtn = document.getElementById('saveBtn');
+    const originalText = saveBtn.textContent;
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+    
     try {
         let scheduledDate;
         let reminderRating = rating;
@@ -224,6 +230,10 @@ async function handleReminderSubmit(e) {
     } catch (error) {
         console.error('Error saving reminder:', error);
         alert('Error saving reminder. Please try again.');
+    } finally {
+        // Restore button state
+        saveBtn.disabled = false;
+        saveBtn.textContent = originalText;
     }
 }
 
@@ -235,6 +245,12 @@ function handleSnooze() {
 // Handle done action
 async function handleDone() {
     if (!currentDueItem) return;
+    
+    // Show loading state
+    const doneBtn = document.getElementById('doneBtn');
+    const originalText = doneBtn.textContent;
+    doneBtn.disabled = true;
+    doneBtn.textContent = 'Processing...';
     
     try {
         // Add to history
@@ -273,6 +289,10 @@ async function handleDone() {
     } catch (error) {
         console.error('Error marking reminder as done:', error);
         alert('Error updating reminder. Please try again.');
+    } finally {
+        // Restore button state
+        doneBtn.disabled = false;
+        doneBtn.textContent = originalText;
     }
 }
 
