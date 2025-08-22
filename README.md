@@ -12,14 +12,6 @@ A lightweight, privacy-focused Chrome extension that helps you create future rem
 - **Daily Digest**: Get notified at 9:00 AM about reminders that need attention
 - **Local Storage**: 100% local - no cloud, no telemetry, no network calls
 
-### 🎯 Rating System
-- **Rating 1**: Soon (1-2 days)
-- **Rating 2**: In a week (3-10 days)  
-- **Rating 3**: In two weeks (11-22 days)
-- **Rating 4**: In a month (23-40 days)
-- **Rating 5**: In a few months (41-70 days)
-- **Custom**: Set exact number of days (1-365)
-
 ### ⚙️ Settings & Customization
 - **Daily Reminder Time**: Configure when you want to be notified (default: 9:00 AM)
 - **Date Display Format**: Choose between YYYY-MM-DD or MM-DD-YYYY
