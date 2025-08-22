@@ -98,16 +98,8 @@ function setupEventListeners() {
 
 // Handle rating selection change
 function handleRatingChange() {
-    const customRating = document.querySelector('input[name="rating"][value="custom"]');
-    const customDaysInput = elements.customDaysInput;
-    
-    if (customRating.checked) {
-        customDaysInput.disabled = false;
-        customDaysInput.focus();
-    } else {
-        customDaysInput.disabled = true;
-        customDaysInput.value = '';
-    }
+    // The clock ratings are now purely visual - no special logic needed
+    // The form will submit the selected rating value automatically
 }
 
 // Open reminder modal
@@ -121,20 +113,22 @@ function openReminderModal(reminder = null) {
         elements.referenceInput.value = reminder.reference || '';
         elements.notesInput.value = reminder.notes || '';
         
+        // Select the appropriate rating
         if (reminder.customDays) {
-            document.querySelector('input[name="rating"][value="custom"]').checked = true;
+            // For custom days, we'll need to handle this differently
+            // For now, just select rating 1 and show custom days
+            document.querySelector('input[name="rating"][value="1"]').checked = true;
             elements.customDaysInput.value = reminder.customDays;
-            elements.customDaysInput.disabled = false;
         } else {
             document.querySelector(`input[name="rating"][value="${reminder.rating}"]`).checked = true;
-            elements.customDaysInput.disabled = true;
+            elements.customDaysInput.value = '';
         }
     } else {
         // New reminder mode
         document.getElementById('modalTitle').textContent = 'New Reminder';
         elements.reminderForm.reset();
         document.querySelector('input[name="rating"][value="1"]').checked = true;
-        elements.customDaysInput.disabled = true;
+        elements.customDaysInput.value = '';
     }
     
     elements.reminderModal.classList.add('active');
@@ -186,7 +180,8 @@ async function handleReminderSubmit(e) {
         let reminderRating = rating;
         let reminderCustomDays = null;
         
-        if (rating === 'custom') {
+        // Check if custom days are provided
+        if (customDays && customDays.trim() !== '') {
             const days = parseInt(customDays);
             if (isNaN(days) || days < 1 || days > 365) {
                 alert('Please enter a valid number of days (1-365)');
@@ -195,6 +190,7 @@ async function handleReminderSubmit(e) {
             scheduledDate = addDaysToDate(getTodayString(), days);
             reminderCustomDays = days;
         } else {
+            // Use the selected rating
             const ratingNum = parseInt(rating);
             const range = currentSettings.ratingRanges[ratingNum];
             scheduledDate = pickRandomDateInRange(range.minDays, range.maxDays);
@@ -264,7 +260,7 @@ async function handleDone() {
                 title: currentDueItem.title,
                 reference: currentDueItem.reference,
                 notes: currentDueItem.notes,
-                rating: currentDueItem.customDays ? 'custom' : currentDueItem.rating,
+                rating: currentDueItem.customDays ? '1' : currentDueItem.rating,
                 customDays: currentDueItem.customDays
             });
         } else {
@@ -323,11 +319,9 @@ function createReminderElement(reminder, sectionType, isNeedAttention) {
     div.innerHTML = `
         <div class="reminder-content">
             <div class="reminder-header">
+				<span class="reminder-date">${displayDate}</span>
                 <h3 class="reminder-title">${reminder.title}</h3>
-                <span class="reminder-date">${displayDate}</span>
             </div>
-            ${reminder.reference ? `<p class="reminder-reference">${reminder.reference}</p>` : ''}
-            ${reminder.notes ? `<p class="reminder-notes">${reminder.notes}</p>` : ''}
         </div>
         <div class="reminder-actions">
             ${reminder.reference ? `<button class="btn-icon" title="Copy reference">📋</button>` : ''}

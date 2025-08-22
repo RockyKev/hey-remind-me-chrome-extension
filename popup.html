@@ -57,32 +57,51 @@
 
                 <div class="form-group">
                     <label>When to Remind</label>
-                    <div class="rating-options">
-                        <label class="rating-option">
-                            <input type="radio" name="rating" value="1" checked>
-                            <span class="rating-label">1 - Soon (1-2 days)</span>
-                        </label>
-                        <label class="rating-option">
-                            <input type="radio" name="rating" value="2">
-                            <span class="rating-label">2 - In a week (3-10 days)</span>
-                        </label>
-                        <label class="rating-option">
-                            <input type="radio" name="rating" value="3">
-                            <span class="rating-label">3 - In two weeks (11-22 days)</span>
-                        </label>
-                        <label class="rating-option">
-                            <input type="radio" name="rating" value="4">
-                            <span class="rating-label">4 - In a month (23-40 days)</span>
-                        </label>
-                        <label class="rating-option">
-                            <input type="radio" name="rating" value="5">
-                            <span class="rating-label">5 - In a few months (41-70 days)</span>
-                        </label>
-                        <label class="rating-option">
-                            <input type="radio" name="rating" value="custom">
-                            <span class="rating-label">Custom days:</span>
-                            <input type="number" id="customDays" name="customDays" min="1" max="365" disabled>
-                        </label>
+                    <div class="clock-ratings">
+                        <div class="rating-option">
+                            <input type="radio" name="rating" value="1" id="rating1" checked>
+                            <label for="rating1" class="clock-label">
+                                <span class="clock-icon">🕐</span>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="rating" value="2" id="rating2">
+                            <label for="rating2" class="clock-label">
+                                <span class="clock-icon">🕐</span>
+                                <span class="clock-icon">🕐</span>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="rating" value="3" id="rating3">
+                            <label for="rating3" class="clock-label">
+                                <span class="clock-icon">🕐</span>
+                                <span class="clock-icon">🕐</span>
+                                <span class="clock-icon">🕐</span>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="rating" value="4" id="rating4">
+                            <label for="rating4" class="clock-label">
+                                <span class="clock-icon">🕐</span>
+                                <span class="clock-icon">🕐</span>
+                                <span class="clock-icon">🕐</span>
+                                <span class="clock-icon">🕐</span>
+                            </label>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" name="rating" value="5" id="rating5">
+                            <label for="rating5" class="clock-label">
+                                <span class="clock-icon">🕐</span>
+                                <span class="clock-icon">🕐</span>
+                                <span class="clock-icon">🕐</span>
+                                <span class="clock-icon">🕐</span>
+                                <span class="clock-icon">🕐</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="custom-days-section">
+                        <label for="customDays" class="custom-label">Custom Days:</label>
+                        <input type="number" id="customDays" name="customDays" min="1" max="365" placeholder="Enter days">
                     </div>
                 </div>
 

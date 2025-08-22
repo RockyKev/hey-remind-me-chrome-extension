@@ -23,11 +23,11 @@
   --shadow-medium: rgba(0, 0, 0, 0.15);
   
   /* Spacing */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
+  --spacing-xs: 2px;
+  --spacing-sm: 4px;
+  --spacing-md: 8px;
+  --spacing-lg: 12px;
+  --spacing-xl: 16px;
   
   /* Typography */
   --font-size-xs: 10px;
@@ -129,8 +129,9 @@ p {
   background: transparent;
   color: var(--text-secondary);
   padding: var(--spacing-xs);
+  margin: var(--spacing-md);
   min-height: 32px;
-  border-radius: 50%;
+  /* border-radius: 50%; */
 }
 
 .btn-icon:hover {
@@ -158,11 +159,12 @@ p {
 .form-group {
   margin-bottom: var(--spacing-lg);
   display: flex;
+  flex-direction: column;
 }
 
 .form-group label {
   display: block;
-  margin-right: var(--spacing-sm);
+  /* margin-right: var(--spacing-sm); */
   /* margin-bottom: var(--spacing-sm); */
   font-weight: 500;
   color: var(--text-primary);
@@ -207,7 +209,7 @@ textarea:disabled {
 /* Rating options */
 .rating-options {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: var(--spacing-sm);
 }
 
@@ -216,13 +218,14 @@ textarea:disabled {
   align-items: center;
   gap: var(--spacing-sm);
   cursor: pointer;
-  padding: var(--spacing-sm);
+  /* padding: var(--spacing-sm); */
   border-radius: var(--border-radius-sm);
   transition: background var(--transition-fast);
 }
 
-.rating-option:hover {
-  background: var(--background-secondary);
+.rating-option .clock-label:hover {
+  /* background: var(--background-secondary); */
+  border: 1px solid var(--primary-color);
 }
 
 .rating-option input[type="radio"] {
@@ -233,6 +236,91 @@ textarea:disabled {
 .rating-label {
   flex: 1;
   cursor: pointer;
+}
+
+/* Clock ratings scale - new styling */
+.clock-ratings {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  justify-content: flex-start;
+}
+
+.clock-ratings .rating-option {
+  /* position: relative; */
+  flex-direction: column;
+  align-items: center;
+  /* min-width: 60px; */
+  /* padding: var(--spacing-sm); */
+}
+
+.clock-ratings .rating-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.rating-option .clock-label {
+  display: flex;
+  align-items: center;
+  /* gap: 2px; */
+  /* padding: var(--spacing-sm); */
+  /* border: 2px solid var(--border-color); */
+  /* border-radius: var(--border-radius-md); */
+  background: var(--background-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  /* min-width: 60px; */
+  justify-content: center;
+}
+
+.rating-option .clock-label:hover {
+  border-color: var(--primary-color);
+  /* background: var(--background-primary); */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-light);
+}
+
+.clock-icon {
+  font-size: var(--font-size-lg);
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+}
+
+/* Selected state for clock ratings */
+.clock-ratings .rating-option input[type="radio"]:checked + .clock-label {
+  border-color: var(--primary-color);
+  background: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(33, 150, 243, 0.3);
+}
+
+.clock-ratings .rating-option input[type="radio"]:checked + .clock-label .clock-icon {
+  color: white;
+}
+
+/* Custom days section */
+.custom-days-section {
+  display: flex;
+  flex-direction: column;
+  align-items:  flex-start;
+  /* gap: var(--spacing-md); */
+  padding: var(--spacing-md);
+  background: var(--background-secondary);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.custom-label {
+  margin: 0;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.custom-days-section input[type="number"] {
+  width: 120px;
+  margin: 0;
 }
 
 /* Popup styles */
@@ -246,7 +334,7 @@ textarea:disabled {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
   border-bottom: 1px solid var(--border-color);
   background: var(--background-primary);
 }
@@ -269,6 +357,7 @@ textarea:disabled {
   margin-bottom: var(--spacing-md);
   font-size: var(--font-size-lg);
   color: var(--text-primary);
+  text-decoration: underline;
 }
 
 .reminder-list {
@@ -277,7 +366,7 @@ textarea:disabled {
 
 .reminder-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   padding: var(--spacing-md);
   margin-bottom: var(--spacing-sm);
@@ -300,8 +389,9 @@ textarea:disabled {
 .reminder-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: var(--spacing-sm);
+  justify-content: flex-start;
+  gap: var(--spacing-md);
+  /* margin-bottom: var(--spacing-sm); */
 }
 
 .reminder-title {
@@ -312,12 +402,13 @@ textarea:disabled {
 }
 
 .reminder-date {
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
-  background: var(--background-primary);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--border-radius-sm);
-  border: 1px solid var(--border-color);
+  font-weight: 700;
+  /* font-size: var(--font-size-sm); */
+  /* color: var(--text-secondary); */
+  /* background: var(--background-primary); */
+  /* padding: var(--spacing-xs) var(--spacing-sm); */
+  /* border-radius: var(--border-radius-sm); */
+  /* border: 1px solid var(--border-color); */
 }
 
 .reminder-reference,
@@ -674,6 +765,23 @@ textarea:disabled {
   }
 } */
 
+/* Clock ratings responsive design */
+/* @media (max-width: 600px) {
+  .clock-ratings {
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+  }
+  
+  .clock-label {
+    min-width: 50px;
+    padding: var(--spacing-xs);
+  }
+  
+  .clock-icon {
+    font-size: var(--font-size-md);
+  }
+} */
+
 /* Accessibility improvements */
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -688,7 +796,8 @@ textarea:disabled {
 .btn-icon:focus,
 input:focus,
 select:focus,
-textarea:focus {
+textarea:focus,
+.clock-label:focus {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
